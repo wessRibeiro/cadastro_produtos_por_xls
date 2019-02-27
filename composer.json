@@ -33,11 +33,14 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "Leroy\\": "app/"
         },
         "classmap": [
             "database/seeds",
             "database/factories"
+        ],
+        "files":[
+            "app/Helpers/V1/MyHelper.php"
         ]
     },
     "autoload-dev": {

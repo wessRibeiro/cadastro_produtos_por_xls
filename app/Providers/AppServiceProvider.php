@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Leroy\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
