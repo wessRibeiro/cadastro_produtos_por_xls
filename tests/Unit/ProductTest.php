@@ -38,7 +38,7 @@ class ProductTest extends TestCase
     public function test_can_delete_product() {
         $product = factory(Product::class)->create();
         $this->delete(route('product', $product->id))
-            ->assertStatus(204);
+            ->assertStatus(200);
     }
     public function test_can_list_product() {
         $product = factory(Product::class, 2)->create()->map(function ($product) {

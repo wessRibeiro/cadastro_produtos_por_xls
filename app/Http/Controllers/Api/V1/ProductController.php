@@ -9,6 +9,7 @@ namespace Leroy\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use Leroy\Services\Api\V1\ProductService;
+use Leroy\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -33,7 +34,8 @@ class ProductController extends Controller
 
     public function store(){
         try{
-            $data = $this->_service->store($this->_request->all());
+            $file = $this->_request->file('products_xls');
+            $data = $this->_service->store($file);
             return $data;
 
         }catch (\Exception $ex){

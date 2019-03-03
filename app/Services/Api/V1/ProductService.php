@@ -7,8 +7,10 @@
 
 namespace Leroy\Services\Api\V1;
 
+use Leroy\Jobs\CreateProductsFromXls;
 use Validator;
 use Leroy\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
@@ -30,15 +32,28 @@ class ProductService
         }
     }
 
-    public function store($data)
+    public function store($file)
     {
-        try {
-            if ($entity = $this->_productModel->create($data)) {
+        try{
+            //regras para o upload do arquivo
+            $rules = [
+                'products_xls'  => 'required|file|mimes:xlsx,xlsm,xltx,xltm,xls,xlt'
+            ];
+            //validando
+            $validate_return = self::validateRequest(['products_xls' => $file], $rules);
+            if ($validate_return === true) {
+                //armazenando para processar em fila (sera apagado depois)
+                $pathProductsXls = Storage::putFileAs('uploads', $file, $file->getClientOriginalName());
+
+                CreateProductsFromXls::dispatchNow($pathProductsXls);
+
                 return returnJson(null, 201, 'api.store.success');
+            }else{
+                throw new \Exception($validate_return['errors']);
             }
 
             return returnJson(null, 400, 'api.store.error');
-        } catch (\Exception $ex) {
+        }catch (\Exception $ex) {
             return returnJson($ex, 400);
         }
     }

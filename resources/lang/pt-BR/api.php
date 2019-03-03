@@ -24,23 +24,23 @@ return [
             '404'  => 'Page not found',
             '500'  => 'Server Error',
         ],
-                'index' => [
+        'index' => [
             'success'  => 'Registros listados com sucesso!',
             'error'    => 'Erro ao tentar listar os registros :(',
         ],
-                'store' => [
+        'store' => [
             'success'  => 'Registro criado com sucesso!',
             'error'    => 'Erro ao tentar criar o registro :(',
         ],
-                'show' => [
+        'show' => [
             'success'  => 'Registro encontrado com sucesso!',
             'error'    => 'Erro ao tentar encontrar o registro :(',
         ],
-                'update' => [
+        'update' => [
             'success'  => 'Registro atualizado com sucesso!',
             'error'    => 'Erro ao tentar atualizar o registro :(',
         ],
-                'destroy' => [
+        'destroy' => [
             'success'  => 'Registro deletado com sucesso!',
             'error'    => 'Erro ao tentar deletar o registro :(',
         ],

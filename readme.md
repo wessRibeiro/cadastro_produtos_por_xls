@@ -3,7 +3,7 @@
 * chmod 777 -R storage
 * chmod 777 -R bootstrap/cache;
 * composer install
-* cp .env.exemple .env (if haven't)
+* cp .env.example .env (if haven't)
 * php artisan key:generate
 * php artisan migrate
 ```
