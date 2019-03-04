@@ -12,6 +12,7 @@ use Illuminate\Http\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Leroy\Models\Product;
+use Leroy\Models\FileHistory;
 
 class CreateProductsFromXls implements ShouldQueue
 {
@@ -19,6 +20,7 @@ class CreateProductsFromXls implements ShouldQueue
     private $pathFile;
     public  $tries = 5;
     private $_product;
+    private $_fileHistory;
 
     /**
      * Create a new job instance.
@@ -39,6 +41,9 @@ class CreateProductsFromXls implements ShouldQueue
     {
         //criando obj produto
         $this->_product = new Product;
+
+        //criando obj de historico do arquivo
+        $this->_fileHistory = new FileHistory;
 
         //lendo arquivo
         $productsFile = Excel::toArray(new ProductsImport, new File(storage_path("app/{$this->pathFile}")));
@@ -80,6 +85,10 @@ class CreateProductsFromXls implements ShouldQueue
                 $this->_product->insert($productsFormated);
                 //apagando arquivo depois que foi processado com sucesso
                 Storage::delete($this->pathFile);
+                //mudando status do historico do arquivo para processado
+                $explodeNameFile = explode('/',$this->pathFile);
+                $this->_fileHistory->where('name', end($explodeNameFile))
+                                   ->update(['is_processed' => 1]);
             }
             break;
         }

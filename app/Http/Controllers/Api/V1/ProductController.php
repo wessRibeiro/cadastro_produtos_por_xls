@@ -72,4 +72,15 @@ class ProductController extends Controller
             return returnJson($ex);
         }
     }
+
+    public function getFilesHistory()
+    {
+        try{
+            $data = $this->_service->getFilesHistory();
+            return $data;
+
+        }catch (\Exception $ex){
+            return returnJson($ex);
+        }
+    }
 }

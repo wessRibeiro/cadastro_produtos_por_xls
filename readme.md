@@ -28,3 +28,8 @@ this code have:
 * rest
 * json
 ````
+endpoint's:
+````
+* products (manage products)
+* files/history (show files history)
+````

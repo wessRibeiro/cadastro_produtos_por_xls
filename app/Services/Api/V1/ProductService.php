@@ -10,16 +10,19 @@ namespace Leroy\Services\Api\V1;
 use Leroy\Jobs\CreateProductsFromXls;
 use Validator;
 use Leroy\Models\Product;
+use Leroy\Models\FileHistory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductService
 {
     protected $_productModel;
+    protected $_fileHistoryModel;
 
-    public function __construct(Product $productModel)
+    public function __construct(Product $productModel, FileHistory $fileHistoryModel)
     {
-        $this->_productModel = $productModel;
+        $this->_productModel     = $productModel;
+        $this->_fileHistoryModel = $fileHistoryModel;
     }
 
     public function index()
@@ -45,6 +48,10 @@ class ProductService
                 //armazenando para processar em fila (sera apagado depois)
                 $pathProductsXls = Storage::putFileAs('uploads', $file, $file->getClientOriginalName());
 
+                //criando registro do arquivo
+                $this->_fileHistoryModel->create(['name' => $file->getClientOriginalName()]);
+
+                //criando fila
                 CreateProductsFromXls::dispatch($pathProductsXls);
 
                 return returnJson(null, 201, 'api.store.success');
@@ -96,6 +103,16 @@ class ProductService
             }
         } catch (\Exception $ex) {
             return returnJson(null, 400, 'api.destroy.error');
+        }
+    }
+    //lista o arquivos e seu status de processamento
+    public function getFilesHistory()
+    {
+        try {
+            $data = $this->_fileHistoryModel->all();
+            return returnJson(null, 200, 'api.index.success', $data);
+        } catch (\Exception $ex) {
+            return returnJson(null, 400, 'api.index.error');
         }
     }
 
