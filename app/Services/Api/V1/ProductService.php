@@ -90,7 +90,7 @@ class ProductService
     {
         try {
             if ($this->_productModel->destroy($id)) {
-                return returnJson(null, 200, 'api.destroy.success');
+                return returnJson(null, 204, 'api.destroy.success');
             } else {
                 return returnJson(null, 400, 'api.destroy.error');
             }

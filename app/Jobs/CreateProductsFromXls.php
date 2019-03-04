@@ -44,13 +44,11 @@ class CreateProductsFromXls implements ShouldQueue
         $productsFile = Excel::toArray(new ProductsImport, new File(storage_path("app/{$this->pathFile}")));
         //header da planilha
         $header = [];
-        //armazenara os produtos formatados para create massive
+        //armazenará os produtos formatados para insert massivo
         $productsFormated = [];
 
         foreach ($productsFile as $products){
-
-            if($products[0][0] == 'Category'){
-
+            if($products[0][0] == 'Category') {
                 //obtendo categoria dos produtos
                 $category = $products[0][1];
                 //obtendo header
@@ -62,28 +60,28 @@ class CreateProductsFromXls implements ShouldQueue
                 unset($products[0]);
                 unset($products[1]);
                 unset($products[2]);
-            }
 
-            //adicionando categoria e tratando dados
-            foreach ($products as $key => $product){
 
-                //im
-                $products[$key][0] = (int)$products[$key][0];
-                //free ship
-                $products[$key][2] = (boolean)$products[$key][2];
-                //description
-                //category
-                array_push($products[$key], (int)$category);
+                //adicionando categoria e tratando dados
+                foreach ($products as $key => $product) {
 
-                //formatando arrays: key => value
-                array_push($productsFormated, array_combine($header, $products[$key]));
+                    //im
+                    $products[$key][0] = (int)$products[$key][0];
+                    //free ship
+                    $products[$key][2] = (boolean)$products[$key][2];
+                    //description
+                    //category
+                    array_push($products[$key], (int)$category);
+
+                    //formatando arrays: key => value
+                    array_push($productsFormated, array_combine($header, $products[$key]));
+                }
+                //insert massivo
+                $this->_product->insert($productsFormated);
+                //apagando arquivo depois que foi processado com sucesso
+                Storage::delete($this->pathFile);
             }
             break;
         }
-        //adicionando massivo
-        $this->_product->insert($productsFormated);
-
-        //apagando arquivo depois de processado
-        Storage::delete($this->pathFile);
     }
 }

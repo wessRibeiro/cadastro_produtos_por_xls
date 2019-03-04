@@ -12,6 +12,7 @@
 ````
 | 200  | OK            | 
 | 201  | Created       | 
+| 204  | Deleted       | 
 | 400  | Bad Request   | 
 | 401  | Unauthorized  |
 | 404  | Page not found|
