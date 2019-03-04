@@ -45,7 +45,7 @@ class ProductService
                 //armazenando para processar em fila (sera apagado depois)
                 $pathProductsXls = Storage::putFileAs('uploads', $file, $file->getClientOriginalName());
 
-                CreateProductsFromXls::dispatchNow($pathProductsXls);
+                CreateProductsFromXls::dispatch($pathProductsXls);
 
                 return returnJson(null, 201, 'api.store.success');
             }else{

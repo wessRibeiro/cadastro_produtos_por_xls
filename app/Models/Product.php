@@ -22,11 +22,11 @@ class Product extends Model
     ];
 
     protected $fillable = [
-        'im',
-        'category',
+        'lm',
         'name',
         'free_shipping',
         'description',
         'price',
+        'category',
     ];
 }

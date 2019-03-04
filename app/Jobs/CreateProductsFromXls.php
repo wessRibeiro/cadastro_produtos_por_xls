@@ -11,12 +11,14 @@ use Leroy\Imports\ProductsImport;
 use Illuminate\Http\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Leroy\Models\Product;
 
 class CreateProductsFromXls implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     private $pathFile;
-    public $tries = 5;
+    public  $tries = 5;
+    private $_product;
 
     /**
      * Create a new job instance.
@@ -35,24 +37,53 @@ class CreateProductsFromXls implements ShouldQueue
      */
     public function handle()
     {
+        //criando obj produto
+        $this->_product = new Product;
+
         //lendo arquivo
         $productsFile = Excel::toArray(new ProductsImport, new File(storage_path("app/{$this->pathFile}")));
+        //header da planilha
+        $header = [];
+        //armazenara os produtos formatados para create massive
+        $productsFormated = [];
+
         foreach ($productsFile as $products){
+
             if($products[0][0] == 'Category'){
-                $data['category'] = $products[0][1];
+
+                //obtendo categoria dos produtos
+                $category = $products[0][1];
+                //obtendo header
+                $header = $products[2];
+                //adicionando coluna category para array merge
+                array_push($header, 'category');
+
+                //apagando linhas que nao sao produtos para ajudar no foreach
                 unset($products[0]);
                 unset($products[1]);
+                unset($products[2]);
             }
-            dd($data, $products);
-            /*if(){
 
-            }*/
-            foreach ($products as $product){
-                $data = [];
+            //adicionando categoria e tratando dados
+            foreach ($products as $key => $product){
+
+                //im
+                $products[$key][0] = (int)$products[$key][0];
+                //free ship
+                $products[$key][2] = (boolean)$products[$key][2];
+                //description
+                //category
+                array_push($products[$key], (int)$category);
+
+                //formatando arrays: key => value
+                array_push($productsFormated, array_combine($header, $products[$key]));
             }
+            break;
         }
+        //adicionando massivo
+        $this->_product->insert($productsFormated);
+
         //apagando arquivo depois de processado
         Storage::delete($this->pathFile);
-
     }
 }

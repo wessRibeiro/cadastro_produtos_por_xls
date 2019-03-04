@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
         if (!Schema::hasTable($this->_tb)) {
             Schema::create($this->_tb, function (Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->integer('im');
+                $table->integer('lm');
                 $table->integer('category');
                 $table->string('name', 255);
                 $table->boolean('free_shipping')->default(0);
