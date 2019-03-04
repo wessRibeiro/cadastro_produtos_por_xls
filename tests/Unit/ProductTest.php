@@ -4,11 +4,8 @@ namespace Tests\Unit;
 
 use Leroy\Models\Product;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class ProductTest extends TestCase
 {
