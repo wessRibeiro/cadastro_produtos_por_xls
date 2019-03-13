@@ -35,3 +35,6 @@ endpoint's:
 ````
 ### Flow code:
 route -> controller -> service -> model
+
+### File to test:
+products_teste.xlsx (into te repo)
